@@ -29,7 +29,11 @@ const createStore = () => {
     },
     actions: {
       nuxtServerInit(vuexContext, context) {
-        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
+        /*
+        디버깅모드에서 debugger 를 이용하여 디버깅가능        
+        */
+        //debugger;
+        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용        
         return context.app.$axios
           .$get('/posts.json')
           .then(data => {
