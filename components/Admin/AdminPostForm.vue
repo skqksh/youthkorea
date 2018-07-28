@@ -1,21 +1,33 @@
 <template>
     <div>
-            <form @submit.prevent="onSave">
+            <v-form @submit.prevent="onSave">
 
-        <AppControlInput v-model="editedPost.author">Author Name</AppControlInput>
+        <AppControlInput v-model="editedPost.author">작성자</AppControlInput>
+        게시글유형
+         <v-select
+          :items="postTypeList"
+          label="선택하세요"
+          item-text="name"
+          item-value="value"
+          solo
+        ></v-select>
+        <AppControlInput v-model="editedPost.title">제목</AppControlInput>
 
-        <AppControlInput v-model="editedPost.title">Title</AppControlInput>
+        <AppControlInput v-model="editedPost.previewText">부제목</AppControlInput>
 
-        <AppControlInput v-model="editedPost.thumbnail">Thumbnail Link</AppControlInput>
-
-        <AppControlInput control-type="textarea" v-model="editedPost.content">Content</AppControlInput>
-
-        <AppControlInput control-type="textarea" v-model="editedPost.previewText">previewText</AppControlInput>
+        <AppControlInput v-model="editedPost.thumbnail">이미지URL</AppControlInput>
+        <div>
+          미리보기 
+          <div>
+            <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+          </div>
+        </div>
+        <AppControlInput control-type="textarea" v-model="editedPost.content">내용</AppControlInput>
 
         <AppButton type="submit">Save</AppButton>
 
         <AppButton type="button" style="margin-left: 10px" btn-style="cancel" @click="onCancel">Cancel</AppButton>
-      </form>
+      </v-form>
 
     </div>
 </template>
@@ -38,7 +50,11 @@ export default {
             thumbnail: '',
             content: '',
             previewText: ''
-          }
+          },
+      postTypeList: [
+        { name: '일반', value: '' },
+        { name: '메인슬라이드', value: 'mainslide' }
+      ]
     }
   },
   methods: {

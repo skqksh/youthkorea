@@ -1,24 +1,17 @@
 <template>
-  <div>
-    <TheHeader @sidenavToggle="displaySidenav= !displaySidenav"/>
-    <TheSidenav
-    :show="displaySidenav" 
-    @close="displaySidenav=false"
-    />
+  <v-app>
+    <TheHeader/>
     <nuxt/>
-  </div>
+  </v-app>
 </template>
 <script>
 import TheHeader from '@/components/Navigation/TheHeader.vue'
-import TheSidenav from '@/components/Navigation/TheSidenav.vue'
-import TheSideNavToggle from '@/components/Navigation/TheSideNavToggle.vue'
 
 export default {
   //미들웨어 추가할 수 있음
   //middleware: 'log',
   components: {
-    TheHeader,
-    TheSidenav
+    TheHeader
   },
   data() {
     return {

@@ -2,10 +2,8 @@ const pkg = require('./package')
 const bodyParser = require('body-parser')
 
 const dbconn = {
-  baseUrl:
-    process.env.YOUTHKOREA_BASEURL || 'https://nuxt-blog-b6bb5.firebaseio.com',
-  fbAPIKey:
-    process.env.YOUTHKOREA_FBAPIKEY || 'AIzaSyBJgWepzRa5Ae1j3y2z47hb_-bt623XOgs'
+  baseUrl: process.env.YOUTHKOREA_BASEURL || 'https://nuxt-blog-b6bb5.firebaseio.com',
+  fbAPIKey: process.env.YOUTHKOREA_FBAPIKEY || 'AIzaSyBJgWepzRa5Ae1j3y2z47hb_-bt623XOgs'
 }
 
 module.exports = {
@@ -16,8 +14,7 @@ module.exports = {
    */
   head: {
     title: pkg.name,
-    meta: [
-      {
+    meta: [{
         charset: 'utf-8'
       },
       {
@@ -30,8 +27,7 @@ module.exports = {
         content: pkg.description
       }
     ],
-    link: [
-      {
+    link: [{
         rel: 'icon',
         type: 'image/x-icon',
         href: '/favicon.ico'
@@ -79,9 +75,7 @@ module.exports = {
     //npm install --save @nuxtjs/axios
     //https://axios.nuxtjs.org/options.html
     '@nuxtjs/axios',
-    // Doc: https://bootstrap-vue.js.org/docs/
-    //부트슽트랩 스타일을 제거하고 싶은경우, bootstrap-vue/nuxt모듈을 제거
-    'bootstrap-vue/nuxt'
+    '@nuxtjs/vuetify'
   ],
   axios: {
     baseURL: dbconn.baseUrl,

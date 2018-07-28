@@ -1,95 +1,71 @@
 <template>
-<div class="header-container">
-  <header class="the-header">
-    <TheSideNavToggle @toggle="$emit('sidenavToggle')" />
-    <div class="logo">
-      <nuxt-link to="/">WD BLOG</nuxt-link>
-    </div>
-    <div class="spacer"></div>
-    <div class="navigation-items">
-      <ul class="nav-list">
-        <li class="nav-item"><nuxt-link to="/posts">Blog</nuxt-link></li>
-        <li class="nav-item"><nuxt-link to="/about">About</nuxt-link></li>
-        <li class="nav-item"><nuxt-link to="/admin">Admin</nuxt-link></li>
-      </ul>
-    </div>
-  </header>
-</div>
+  <div class="header-container">
+    <!-- 
+        네비게이션 참고 url : 
+        https://github.com/vuetifyjs/vuetifyjs.com/blob/master/src/examples/layouts/complex.vue
+        
+       -->
+       <span class="hidden-md-and-up">
+         <v-navigation-drawer v-model="drawerRight" fixed right clipped app>
+      <v-list dense>
+        <v-list-tile v-for="(nav, index) in navList" :key="index" @click.stop="moveTo(nav.path)">
+          <v-list-tile-content>
+            <v-list-tile-title>{{nav.title}}</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+      </v-list>
+    </v-navigation-drawer>
+      </span>
+   
+    <v-toolbar color="blue" dark fixed app clipped-right>
+      <v-toolbar-title>
+        <nuxt-link to="/">한국청소년문화원</nuxt-link>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <span class="hidden-md-and-up">
+          <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight"></v-toolbar-side-icon>
+      </span>
+      <span class="hidden-sm-and-down">
+        <v-toolbar-items>
+          <v-btn flat v-for="(nav, index) in navList" :key="index">
+            <nuxt-link :to="nav.path">{{nav.title}}</nuxt-link>
+          </v-btn>
+        </v-toolbar-items>
+      </span>
+    </v-toolbar>
+
+  </div>
 </template>
 
 <script>
-import TheSideNavToggle from "@/components/Navigation/TheSideNavToggle";
-
 export default {
-  name: "TheHeader",
-  components: {
-    TheSideNavToggle
+  name: 'TheHeader',
+  data: () => ({
+    drawerRight: false,
+    navList: [
+      {
+        path: '/posts',
+        title: '활동'
+      },
+      {
+        path: '/about',
+        title: '연혁'
+      },
+      {
+        path: '/admin',
+        title: '관리자페이지'
+      }
+    ]
+  }),
+  methods: {
+    moveTo(path) {
+      this.$router.push(path)
+    }
   }
-};
+}
 </script>
 
 
 <style scoped>
-.header-container {
-  height: 60px;
-}
-
-.the-header {
-  width: 100%;
-  position: fixed;
-  height: 60px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: black;
-  z-index: 100;
-  box-sizing: border-box;
-  padding: 0 20px;
-}
-
-.logo {
-  margin: 0 10px;
-  font-size: 1.3rem;
-}
-
-.logo a {
-  text-decoration: none;
-  color: white;
-}
-
-.spacer {
-  flex: 1;
-}
-
-.navigation-items {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .navigation-items {
-    display: block;
-  }
-}
-
-.nav-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
-.nav-item {
-  margin: 0 10px;
-}
-
-.nav-item a {
-  text-decoration: none;
-  color: white;
-}
-
-.nav-item a:hover,
-.nav-item a:active,
-.nav-item a.nuxt-link-active {
-  color: red;
-}
 </style>
