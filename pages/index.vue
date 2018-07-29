@@ -1,5 +1,5 @@
 <template>
-  <div class="home-page">
+  <div>
     <v-carousel id="mainCarousel">
       <nuxt-link v-for="(item,i) in mainSlidePosts" :key="i" :to="postLink('/posts/'+item.id)">
         <v-carousel-item :src="item.thumbnail" class="mainCarouselItem">
@@ -15,7 +15,9 @@
 export default {
   computed: {
     loadedPosts() {
-      return this.$store.getters.loadedPosts
+      return this.$store.getters.loadedPosts.filter(
+        x => x.pageType === this.CONST.PAGETYPE.BASIC || x.pageType === ''
+      )
     },
     mainSlidePosts() {
       var posts = this.$store.getters.loadedPosts.filter(
