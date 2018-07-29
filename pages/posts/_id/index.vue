@@ -1,6 +1,9 @@
 <template>
     <div class="single-post-page">
         <section class="post">
+          <div>
+            <img :src="loadedPost.thumbnail" alt="" error="this.style.display='none'">
+          </div>
             <h1 class="post-title">{{loadedPost.title}}</h1>
             <div class="post-details">
                 <div class="post-detail">Last Updated on {{loadedPost.updatedDate | date}}</div>

@@ -12,36 +12,36 @@
 </template>
 
 <script>
-    export default {
-        name :'PostPreview',
-        props: {
-            id : {
-                type : String,
-                required : true
-            },
-            title  : {
-                type : String,
-                required : true
-            },
-            isAdmin : {
-              type : Boolean,
-              required: true,
-            },
-            previewText  : {
-                type : String,
-                required : true
-            },
-            thumbnail  : {
-                type : String,
-                required : true
-            },
-        },
-        computed: {
-          postLink() {
-            return this.isAdmin ? '/admin/'+ this.id : '/posts/'+this.id
-          }
-        }
+export default {
+  name: 'PostPreview',
+  props: {
+    id: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      required: true
+    },
+    isAdmin: {
+      type: Boolean,
+      required: true
+    },
+    previewText: {
+      type: String,
+      required: true
+    },
+    thumbnail: {
+      type: String,
+      required: true
     }
+  },
+  computed: {
+    postLink() {
+      return this.isAdmin ? '/admin/' + this.id : '/posts/' + this.id
+    }
+  }
+}
 </script>
 <style scoped>
 .post-preview {

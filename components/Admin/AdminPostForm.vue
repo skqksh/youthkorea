@@ -10,6 +10,7 @@
           item-text="name"
           item-value="value"
           solo
+          v-model="editedPost.pageType"
         ></v-select>
         <AppControlInput v-model="editedPost.title">제목</AppControlInput>
 
@@ -49,11 +50,12 @@ export default {
             title: '',
             thumbnail: '',
             content: '',
-            previewText: ''
+            previewText: '',
+            pageType: ''
           },
       postTypeList: [
-        { name: '일반', value: '' },
-        { name: '메인슬라이드', value: 'mainslide' }
+        { name: '일반', value: this.CONST.PAGETYPE.BASIC },
+        { name: '메인슬라이드', value: this.CONST.PAGETYPE.MAINSLIDE }
       ]
     }
   },

@@ -1,5 +1,6 @@
 <template>
   <div class="header-container">
+    <div style="height:50px"></div>
     <!-- 
         네비게이션 참고 url : 
         https://github.com/vuetifyjs/vuetifyjs.com/blob/master/src/examples/layouts/complex.vue

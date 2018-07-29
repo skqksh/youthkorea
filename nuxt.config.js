@@ -66,7 +66,7 @@ module.exports = {
    ** Plugins to load before mounting the App
    전역 component를 등록함으로써, 페이지별로 import할 필요가 없게됨
    */
-  plugins: ['~plugins/core-components.js', '~plugins/date-filter.js'],
+  plugins: ['~plugins/core-components.js', '~plugins/date-filter.js', '~plugins/const.js'],
 
   /*
    ** Nuxt.js modules
