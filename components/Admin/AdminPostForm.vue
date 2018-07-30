@@ -1,36 +1,35 @@
 <template>
-    <div>
-            <v-form @submit.prevent="onSave">
+  <v-container>
 
-        <AppControlInput v-model="editedPost.author">작성자</AppControlInput>
-        게시글유형
-         <v-select
-          :items="postTypeList"
-          label="선택하세요"
-          item-text="name"
-          item-value="value"
-          solo
-          v-model="editedPost.pageType"
-        ></v-select>
-        <AppControlInput v-model="editedPost.title">제목</AppControlInput>
+    <v-layout>
+      <v-flex md6 offset-md3>
+        <v-form @submit.prevent="onSave">
 
-        <AppControlInput v-model="editedPost.previewText">부제목</AppControlInput>
+          <AppControlInput v-model="editedPost.author" label="작성자"></AppControlInput>
+          게시글유형
+          <v-select :items="postTypeList" label="선택하세요" item-text="name" item-value="value" solo v-model="editedPost.pageType"></v-select>
+          <AppControlInput v-model="editedPost.title" label="제목"></AppControlInput>
 
-        <AppControlInput v-model="editedPost.thumbnail">이미지URL</AppControlInput>
-        <div>
-          미리보기 
+          <AppControlInput v-model="editedPost.previewText" label="부제목"></AppControlInput>
+
+          <AppControlInput v-model="editedPost.thumbnail" label="이미지URL"></AppControlInput>
           <div>
-            <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+            미리보기
+            <div>
+              <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+            </div>
           </div>
-        </div>
-        <AppControlInput control-type="textarea" v-model="editedPost.content">내용</AppControlInput>
+          <AppControlInput control-type="textarea" v-model="editedPost.content" label="내용"></AppControlInput>
 
-        <AppButton type="submit">Save</AppButton>
+          <AppButton type="submit">Save</AppButton>
 
-        <AppButton type="button" style="margin-left: 10px" btn-style="cancel" @click="onCancel">Cancel</AppButton>
-      </v-form>
+          <AppButton type="button" style="margin-left: 10px" btn-style="error" @click="onCancel">Cancel</AppButton>
+        </v-form>
+      </v-flex>
 
-    </div>
+
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
@@ -44,7 +43,9 @@ export default {
   data() {
     return {
       editedPost: this.post
-        ? { ...this.post }
+        ? {
+            ...this.post
+          }
         : {
             author: '',
             title: '',
@@ -54,8 +55,14 @@ export default {
             pageType: ''
           },
       postTypeList: [
-        { name: '일반', value: this.CONST.PAGETYPE.BASIC },
-        { name: '메인슬라이드', value: this.CONST.PAGETYPE.MAINSLIDE }
+        {
+          name: '일반',
+          value: this.CONST.PAGETYPE.BASIC
+        },
+        {
+          name: '메인슬라이드',
+          value: this.CONST.PAGETYPE.MAINSLIDE
+        }
       ]
     }
   },
