@@ -1,9 +1,5 @@
 <template>
-  <v-container>
-
-    <v-layout>
-      <v-flex md6 offset-md3>
-        <v-form @submit.prevent="onSave">
+      <v-form @submit.prevent="onSave">
 
           <AppControlInput v-model="editedPost.author" label="작성자"></AppControlInput>
           게시글유형
@@ -25,11 +21,6 @@
 
           <AppButton type="button" style="margin-left: 10px" btn-style="error" @click="onCancel">Cancel</AppButton>
         </v-form>
-      </v-flex>
-
-
-    </v-layout>
-  </v-container>
 </template>
 
 <script>

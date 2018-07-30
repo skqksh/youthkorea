@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <v-layout>
+    <v-flex xs12>
+
     <v-carousel id="mainCarousel">
       <nuxt-link v-for="(item,i) in mainSlidePosts" :key="i" :to="postLink('/posts/'+item.id)">
         <v-carousel-item :src="item.thumbnail" class="mainCarouselItem">
@@ -8,7 +10,8 @@
     </v-carousel>
 
     <PostList :posts="loadedPosts" />
-  </div>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

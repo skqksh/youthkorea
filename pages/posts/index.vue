@@ -1,7 +1,9 @@
 <template>
-  <div>
-     <PostList :posts="loadedPosts" />
-  </div>
+  <v-layout>
+    <v-flex xs12>
+    <PostList :posts="loadedPosts" />
+    </v-flex>
+  </v-layout>
 </template>
 <script>
 export default {

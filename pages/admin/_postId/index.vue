@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <div class="admin-post-page">
-      <section class="update-form">
-        <AdminPostForm @submit="onSubmitted" :post="loadedPost" />
-      </section>
-    </div>
-  </div>
+  <v-layout>
+    <v-flex xs12 sm6 offset-sm3>
+      <AdminPostForm @submit="onSubmitted" :post="loadedPost" />
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
@@ -23,7 +21,10 @@ export default {
       .$get('/posts/' + context.params.postId + '.json')
       .then(data => {
         return {
-          loadedPost: { ...data, id: context.params.postId }
+          loadedPost: {
+            ...data,
+            id: context.params.postId
+          }
         }
       })
       .catch(e => context.error(e))

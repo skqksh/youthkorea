@@ -1,9 +1,9 @@
 <template>
-  <div class="admin-new-post-page">
-    <section class="new-post-form">
+  <v-layout>
+    <v-flex xs12 sm6 offset-sm3>
   <AdminPostForm @submit="onSubmitted"/>
-    </section>
-  </div>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>

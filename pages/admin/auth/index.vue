@@ -1,10 +1,11 @@
 <template>
-  <div class="admin-auth-page">
-    <div class="auth-container">
+  <v-layout>
+    <v-flex xs12 sm6 offset-sm3>
+      <h1>로그인</h1>
       <!-- submit.prevent : 페이지를 다시 호출하지 않도록 함.다시 호출하면 새로고침 됨 -->
       <form @submit.prevent="onSubmit">
-        <AppControlInput type="email" v-model="email">E-Mail Address</AppControlInput>
-        <AppControlInput type="password" v-model="password">Password</AppControlInput>
+        <AppControlInput type="email" v-model="email" label="이메일"></AppControlInput>
+        <AppControlInput type="password" v-model="password" label="암호"></AppControlInput>
         <AppButton type="submit">{{ isLogin ? 'Login' : 'Sign Up' }}</AppButton>
         <AppButton
           type="button"
@@ -12,8 +13,9 @@
           style="margin-left: 10px"
           @click="isLogin = !isLogin">Switch to {{ isLogin ? 'Signup' : 'Login' }}</AppButton>
       </form>
-    </div>
-  </div>
+    </v-flex>
+  </v-layout>
+
 </template>
 
 <script>
@@ -44,18 +46,5 @@ export default {
 </script>
 
 <style scoped>
-.admin-auth-page {
-  padding: 20px;
-}
-
-.auth-container {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 2px #ccc;
-  width: 300px;
-  margin: auto;
-  padding: 10px;
-  box-sizing: border-box;
-}
 </style>
 
