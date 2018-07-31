@@ -40,7 +40,7 @@ export default {
   },
   data: () => ({
     drawerRight: false,
-    drawer: true,
+    drawer: false,
     navList: [
       {
         click: '/posts',
@@ -68,7 +68,7 @@ export default {
       },
       {
         icon: 'view_comfy',
-        click: '/admin/setting',
+        click: '/admin/setting/category',
         text: '카테고리 설정'
       },
       {

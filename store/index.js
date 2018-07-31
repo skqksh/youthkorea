@@ -5,9 +5,16 @@ const createStore = () => {
   return new Vuex.Store({
     state: {
       loadedPosts: [],
+      loadedCategories: [],
       token: null,
     },
     mutations: {
+      setCategory(state, categoryList) {
+        state.loadedCategories = categoryList
+      },
+      addCategory(state, category) {
+        state.loadedCategories.push(category)
+      },
       setPosts(state, posts) {
         state.loadedPosts = posts
       },
@@ -44,8 +51,48 @@ const createStore = () => {
               })
             }
             vuexContext.commit('setPosts', postsArray)
+
           })
-          .catch(e => context.error(e))
+          .catch(e => context.error(e)) && vuexContext.dispatch('getCategory')
+      },
+      getCategory(vuexContext) {
+        return this.$axios
+          .$get('/category.json')
+          .then(data => {
+            const categoryList = [];
+            for (const key in data) {
+              categoryList.push({ ...data[key],
+                id: key
+              })
+            }
+            vuexContext.commit('setCategory', categoryList)
+          })
+          .catch(e => console.log(e))
+      },
+      addCategory(vuexContext, categoryList) {
+        const createdCategory = {
+          ...categoryList,
+          updatedDate: new Date()
+        }
+        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
+        return this.$axios.$post('/category.json?auth=' + vuexContext.state.token, createdCategory)
+          .then(data => {
+
+            vuexContext.commit('addCategory', { ...createdCategory,
+              id: data.name
+            })
+          })
+          .catch(e => console.log(e))
+      },
+      delCategory(vuexContext, categoryIdList) {
+        for (var key in categoryIdList) {
+          this.$axios.$delete('/category/' + categoryIdList[key] + '.json?auth=' + vuexContext.state.token)
+            .then(data => {
+
+            })
+            .catch(error => console.log(error))
+        }
+        return true;
       },
       addPost(vuexContext, post) {
         const createdPost = {
@@ -156,6 +203,9 @@ const createStore = () => {
     getters: {
       loadedPosts(state) {
         return state.loadedPosts
+      },
+      loadedCategories(state) {
+        return state.loadedCategories
       },
       isAuthenticated(state) {
         return state.token != null
