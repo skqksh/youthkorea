@@ -1,12 +1,12 @@
 <template>
-  <div class="header-container">
+  <div>
     <!-- 
         네비게이션 참고 url : 
         https://github.com/vuetifyjs/vuetifyjs.com/blob/master/src/examples/layouts/complex.vue
         
        -->
 
-    <Drawer :items="navList" isRight :drawer="drawerRight" class="hidden-md-and-up"/>
+    <Drawer :items="navList" isRight :drawer="drawerRight" class="hidden-md-and-up" />
     <v-toolbar :clipped-right="$vuetify.breakpoint.lgAndUp" color="blue darken-3" dark app fixed>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
         <v-icon @click.stop="drawer = !drawer" v-if="isAdmin">list</v-icon>
@@ -15,17 +15,36 @@
       <v-spacer></v-spacer>
       <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight" class="hidden-md-and-up"></v-toolbar-side-icon>
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat v-for="(item, index) in navList" :key="index" @click="navTo(item.click)">
-          {{item.text}}
-        </v-btn>
+        <template v-for="(item, index) in navList">
+          <v-menu v-if="item.children" :key="index">
+            <v-btn slot="activator" flat>
+              {{item.text}}
+              <v-icon>arrow_drop_down</v-icon>
+            </v-btn>
+            <v-list>
+              <v-list-tile v-for="(child, i) in item.children" :key="i" @click="navTo(child.click)">
+                <v-list-tile-content>
+                  <v-list-tile-title>
+                    {{ child.text }}
+                  </v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-menu>
+          <v-btn v-else flat @click="navTo(item.click)" :key="index">
+            {{item.text}}
+          </v-btn>
+        </template>
+
       </v-toolbar-items>
     </v-toolbar>
-    <Drawer :items="adminNavList" :drawer="drawer" v-if="isAdmin" />
+    <Drawer :items="adminNavList" :drawer="drawer" v-if="isAdmin" />   
   </div>
 </template>
 
 <script>
 import Drawer from '@/components/Navigation/Drawer.vue'
+import CONST from '@/plugins/const.js'
 
 export default {
   name: 'TheHeader',
@@ -39,19 +58,32 @@ export default {
   },
   data: () => ({
     drawerRight: false,
-    drawer: false,
+    drawer: true,
     navList: [
       {
+        icon: 'grade',
         click: '/posts',
         text: '활동'
       },
       {
-        click: '/about',
-        text: '연혁'
-      },
-      {
-        click: '/admin',
-        text: '관리자페이지'
+        text: '소개',
+        children: [
+          {
+            icon: 'pan_tool',
+            text: '인사말',
+            click: '/about/' + CONST.CATEGORY.ORG_GREETING
+          },
+          {
+            icon: 'group',
+            text: '조직도',
+            click: '/about/' + CONST.CATEGORY.ORG_CHART
+          },
+          {
+            icon: 'account_balance',
+            text: '연혁',
+            click: '/about/' + CONST.CATEGORY.ORG_HISTORY
+          }
+        ]
       }
     ],
     adminNavList: [
@@ -64,6 +96,26 @@ export default {
         icon: 'edit',
         click: '/admin/new-post',
         text: '새글 작성'
+      },
+      {
+        text: '소개',
+        children: [
+          {
+            icon: 'pan_tool',
+            text: '인사말',
+            click: '/about/' + CONST.CATEGORY.ORG_GREETING
+          },
+          {
+            icon: 'group',
+            text: '조직도',
+            click: '/about/' + CONST.CATEGORY.ORG_CHART
+          },
+          {
+            icon: 'account_balance',
+            text: '연혁',
+            click: '/about/' + CONST.CATEGORY.ORG_HISTORY
+          }
+        ]
       },
       {
         icon: 'view_comfy',

@@ -1,26 +1,30 @@
 <template>
-      <v-form @submit.prevent="onSave">
+  <v-container fluid>
+    <v-form @submit.prevent="onSave">
 
-          <AppControlInput v-model="editedPost.author" label="작성자"></AppControlInput>
-          게시글유형
-          <v-select :items="postTypeList" label="선택하세요" item-text="name" item-value="value" solo v-model="editedPost.pageType"></v-select>
-          <AppControlInput v-model="editedPost.title" label="제목"></AppControlInput>
+      <v-checkbox v-model="editedPost.onMainSlide" label="메인슬라이드 게시"></v-checkbox>
 
-          <AppControlInput v-model="editedPost.previewText" label="부제목"></AppControlInput>
+      <v-select v-model="editedPost.category" :items="loadedCategories" label="카테고리" item-text="name" item-value="id"></v-select>
+      
+      <AppControlInput v-model="editedPost.title" label="제목" required></AppControlInput>
 
-          <AppControlInput v-model="editedPost.thumbnail" label="이미지URL"></AppControlInput>
-          <div>
-            미리보기
-            <div>
-              <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
-            </div>
-          </div>
-          <AppControlInput control-type="textarea" v-model="editedPost.content" label="내용"></AppControlInput>
+      <AppControlInput v-model="editedPost.previewText" label="부제목"></AppControlInput>
 
-          <AppButton type="submit">Save</AppButton>
+      <AppControlInput v-model="editedPost.thumbnail" label="이미지URL"></AppControlInput>
+      <div v-if="editedPost.thumbnail">
+        미리보기
+        <div>
+          <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+        </div>
+      </div>
+      <AppControlInput control-type="textarea" v-model="editedPost.content" label="내용" required></AppControlInput>
 
-          <AppButton type="button" style="margin-left: 10px" btn-style="error" @click="onCancel">Cancel</AppButton>
-        </v-form>
+      <AppButton type="submit">Save</AppButton>
+
+      <AppButton type="button" style="margin-left: 10px" btn-style="error" @click="onCancel">Cancel</AppButton>
+    </v-form>
+  </v-container>
+
 </template>
 
 <script>
@@ -38,23 +42,15 @@ export default {
             ...this.post
           }
         : {
-            author: '',
+            author: 'admin',
             title: '',
             thumbnail: '',
             content: '',
             previewText: '',
-            pageType: ''
-          },
-      postTypeList: [
-        {
-          name: '일반',
-          value: this.CONST.PAGETYPE.BASIC
-        },
-        {
-          name: '메인슬라이드',
-          value: this.CONST.PAGETYPE.MAINSLIDE
-        }
-      ]
+            onMainSlide: false,
+            category: '',
+            categoryCodeName: ''
+          }
     }
   },
   methods: {
@@ -63,6 +59,16 @@ export default {
     },
     onCancel() {
       this.$router.push('/admin')
+    }
+  },
+  computed: {
+    loadedCategories() {
+      return this.$store.getters.loadedCategories.filter(
+        x =>
+          x.sysCodeName !== this.CONST.CATEGORY.ORG_GREETING &&
+          x.sysCodeName !== this.CONST.CATEGORY.ORG_HISTORY &&
+          x.sysCodeName !== this.CONST.CATEGORY.ORG_CHART
+      )
     }
   }
 }

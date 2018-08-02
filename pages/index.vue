@@ -18,14 +18,10 @@
 export default {
   computed: {
     loadedPosts() {
-      return this.$store.getters.loadedPosts.filter(
-        x => x.pageType === this.CONST.PAGETYPE.BASIC || x.pageType === ''
-      )
+      return this.$store.getters.loadedPosts
     },
     mainSlidePosts() {
-      var posts = this.$store.getters.loadedPosts.filter(
-        x => x.pageType === this.CONST.PAGETYPE.MAINSLIDE
-      )
+      var posts = this.$store.getters.loadedPosts.filter(x => x.onMainSlide)
       return posts
     }
   },

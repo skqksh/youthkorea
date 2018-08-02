@@ -1,21 +1,37 @@
 <template>
-  <v-layout>
-    <v-flex xs12>
-      <section class="existing-post">
-        <h1>게시글 목록</h1>
-        <PostList isAdmin :posts="loadedPosts" />
-      </section>
-    </v-flex>
-  </v-layout>
+ <v-container fluid>
+    <v-layout row wrap justify-center>
+      <v-flex xs12>
+        <h1>관리자페이지 메인</h1>
+      </v-flex>
+      <v-flex xs12 md6>
+        <v-select v-model="selectedCategory" :items="loadedCategories" item-text="name" item-value="id" box chips label="카테고리" multiple></v-select>
+      </v-flex>
+    </v-layout>
+    <PostList isAdmin :posts="loadedPosts" />
+  </v-container>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      selectedCategory: []
+    }
+  },
   layout: 'admin',
   middleware: ['check-auth', 'auth'],
   computed: {
     loadedPosts() {
       return this.$store.getters.loadedPosts
+    },
+    loadedCategories() {
+      return this.$store.getters.loadedCategories.filter(
+        x =>
+          x.sysCodeName !== this.CONST.CATEGORY.ORG_GREETING &&
+          x.sysCodeName !== this.CONST.CATEGORY.ORG_HISTORY &&
+          x.sysCodeName !== this.CONST.CATEGORY.ORG_CHART
+      )
     }
   },
   methods: {

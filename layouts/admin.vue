@@ -2,9 +2,7 @@
   <v-app>
     <TheHeader isAdmin/>
     <v-content>
-      <v-container fluid fill-height>
-        <nuxt/>
-      </v-container>
+         <nuxt/>
     </v-content>
   </v-app>
 </template>

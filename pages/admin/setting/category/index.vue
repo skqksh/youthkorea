@@ -1,13 +1,16 @@
 <template>
-  <v-layout row wrap>
-    <v-flex d-flex xs12 sm6 md4 offset-md2>
+<v-container>
+
+  <v-layout row wrap justify-space-around>
+    <v-flex xs12 sm6 md5>
       <v-card>
         <h1>카테고리 목록</h1>
         <AppButton type="button" @click="delSelectedCategory" btn-style="error">선택카테고리제거</AppButton>
         <v-list>
           <v-list-tile v-for="(item,index) in loadedCategories" :key="index">
             <v-list-tile-action>
-              <v-checkbox :value="item.id" v-model="selectedCategory"></v-checkbox>
+              <v-icon v-if="item.isSysCode">star</v-icon>
+              <v-checkbox v-else :value="item.id" v-model="selectedCategory"></v-checkbox>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title v-text="item.name"></v-list-tile-title>
@@ -16,7 +19,7 @@
         </v-list>
       </v-card>
     </v-flex>
-    <v-flex d-flex xs12 sm6  md4>
+    <v-flex xs12 sm6  md5>
       <v-card>
         <h1>새 카테고리 추가</h1>
         <v-form @submit.prevent="onSubmitted">
@@ -26,6 +29,7 @@
       </v-card>
     </v-flex>
   </v-layout>
+</v-container>
 </template>
 
 <script>
@@ -35,7 +39,9 @@ export default {
   data() {
     return {
       newCategory: {
-        name: ''
+        name: '',
+        isSysCode: false,
+        sysCodeName: ''
       },
       selectedCategory: []
     }
@@ -58,6 +64,8 @@ export default {
 
       this.$store.dispatch('addCategory', category).then(() => {
         alert('카테고리가 추가되었습니다.')
+
+        location.reload()
       })
     },
     delSelectedCategory() {
@@ -71,19 +79,14 @@ export default {
   },
   computed: {
     loadedCategories() {
-      return this.$store.getters.loadedCategories.sort(function(a, b) {
-        var nameA = a.name.toUpperCase() // ignore upper and lowercase
-        var nameB = b.name.toUpperCase() // ignore upper and lowercase
-        if (nameA < nameB) {
-          return -1
-        }
-        if (nameA > nameB) {
-          return 1
-        }
-
-        // 이름이 같을 경우
-        return 0
-      })
+      return (
+        this.$store.getters.loadedCategories
+          //시스템코드를 상단으로
+          .sort(function(x, y) {
+            // true values first
+            return x.isSysCode === y.isSysCode ? 0 : x.isSysCode ? -1 : 1
+          })
+      )
     }
   }
 }

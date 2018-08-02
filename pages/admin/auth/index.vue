@@ -1,6 +1,8 @@
 <template>
-  <v-layout>
-    <v-flex xs12 sm6 offset-sm3>
+<v-container fluid>
+
+  <v-layout row wrap justify-center>
+    <v-flex xs12 sm6 md4>
       <h1>로그인</h1>
       <!-- submit.prevent : 페이지를 다시 호출하지 않도록 함.다시 호출하면 새로고침 됨 -->
       <form @submit.prevent="onSubmit">
@@ -15,6 +17,7 @@
       </form>
     </v-flex>
   </v-layout>
+</v-container>
 
 </template>
 

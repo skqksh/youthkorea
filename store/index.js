@@ -211,7 +211,18 @@ const createStore = () => {
         return state.loadedPosts
       },
       loadedCategories(state) {
-        return state.loadedCategories
+        return state.loadedCategories.sort(function (a, b) {
+          var nameA = a.name.toUpperCase() // ignore upper and lowercase
+          var nameB = b.name.toUpperCase() // ignore upper and lowercase
+          if (nameA < nameB) {
+            return -1
+          }
+          if (nameA > nameB) {
+            return 1
+          }
+          // 이름이 같을 경우
+          return 0
+        })
       },
       isAuthenticated(state) {
         return state.token != null
