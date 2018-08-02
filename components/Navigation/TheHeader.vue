@@ -6,16 +6,15 @@
         
        -->
 
-    <Drawer :items="navList" isRight :drawer="drawerRight" v-if="$vuetify.breakpoint.smAndDown" />
+    <Drawer :items="navList" isRight :drawer="drawerRight" class="hidden-md-and-up"/>
     <v-toolbar :clipped-right="$vuetify.breakpoint.lgAndUp" color="blue darken-3" dark app fixed>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
         <v-icon @click.stop="drawer = !drawer" v-if="isAdmin">list</v-icon>
         <nuxt-link to="/"> 한국청소년문화원</nuxt-link>
       </v-toolbar-title>
-
       <v-spacer></v-spacer>
-      <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight" v-if="$vuetify.breakpoint.smAndDown"></v-toolbar-side-icon>
-      <v-toolbar-items v-if="$vuetify.breakpoint.mdAndUp">
+      <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight" class="hidden-md-and-up"></v-toolbar-side-icon>
+      <v-toolbar-items class="hidden-sm-and-down">
         <v-btn flat v-for="(item, index) in navList" :key="index" @click="navTo(item.click)">
           {{item.text}}
         </v-btn>

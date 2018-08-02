@@ -35,13 +35,18 @@ const createStore = () => {
       }
     },
     actions: {
-      nuxtServerInit(vuexContext, context) {
+      async nuxtServerInit(vuexContext, context) {
         /*
         디버깅모드에서 debugger 를 이용하여 디버깅가능        
         */
         //debugger;
         //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용        
-        return context.app.$axios
+        await vuexContext.dispatch('getPosts')
+        await vuexContext.dispatch('getCategory')
+      },
+      getPosts(vuexContext) {
+
+        return this.$axios
           .$get('/posts.json')
           .then(data => {
             const postsArray = [];
@@ -53,9 +58,10 @@ const createStore = () => {
             vuexContext.commit('setPosts', postsArray)
 
           })
-          .catch(e => context.error(e)) && vuexContext.dispatch('getCategory')
+          .catch(e => context.error(e))
       },
       getCategory(vuexContext) {
+
         return this.$axios
           .$get('/category.json')
           .then(data => {
