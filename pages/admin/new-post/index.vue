@@ -17,6 +17,11 @@ export default {
   },
   methods: {
     onSubmitted(postData) {
+      if (!postData.category) {
+        alert('카테고리를 선택해 주세요')
+        return false
+      }
+
       this.$store.dispatch('addPost', postData).then(() => {
         this.$router.push('/admin')
       })
