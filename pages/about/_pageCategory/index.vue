@@ -1,20 +1,32 @@
 <template>
-
-  <v-layout>
-      
-    <v-flex xs12 sm6 offset-sm3>
-      <v-card v-for="post in loadedPosts" :key="post.title">{{post.title}}</v-card>
+<v-container fluid>
+  <v-layout row wrap justify-center>      
+    <v-flex v-if="loadedPost" xs12 sm8 md6>
+      <h1>{{loadedPost.title}}</h1>
+      <h3>{{loadedPost.previewText}}</h3>
+      <div>
+        <img :src="loadedPost.thumbnail" alt="">
+      </div>
+      <div>
+         {{loadedPost.content}}
+      </div>
     </v-flex>
   </v-layout>
+</v-container>
 </template>
 
 <script>
 export default {
+  asyncData(context) {
+    return {
+      pageCategory: context.params.pageCategory
+    }
+  },
   computed: {
-    loadedPosts() {
+    loadedPost() {
       return this.$store.getters.loadedPosts.filter(
-        x => x.categoryCodeName === 'orggreeting'
-      )
+        x => x.categoryCodeName === this.pageCategory
+      )[0]
     }
   }
 }

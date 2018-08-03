@@ -9,7 +9,7 @@
     <Drawer :items="navList" isRight :drawer="drawerRight" class="hidden-md-and-up" />
     <v-toolbar :clipped-right="$vuetify.breakpoint.lgAndUp" color="blue darken-3" dark app fixed>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <v-icon @click.stop="drawer = !drawer" v-if="isAdmin">list</v-icon>
+        <v-icon @click.stop="drawer = !drawer" v-if="isAdmin">list&nbsp;&nbsp;</v-icon>
         <nuxt-link to="/"> 한국청소년문화원</nuxt-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
@@ -103,17 +103,17 @@ export default {
           {
             icon: 'pan_tool',
             text: '인사말',
-            click: '/about/' + CONST.CATEGORY.ORG_GREETING
+            click: '/admin/setting/introduce/' + CONST.CATEGORY.ORG_GREETING
           },
           {
             icon: 'group',
             text: '조직도',
-            click: '/about/' + CONST.CATEGORY.ORG_CHART
+            click: '/admin/setting/introduce/' + CONST.CATEGORY.ORG_CHART
           },
           {
             icon: 'account_balance',
             text: '연혁',
-            click: '/about/' + CONST.CATEGORY.ORG_HISTORY
+            click: '/admin/setting/introduce/' + CONST.CATEGORY.ORG_HISTORY
           }
         ]
       },

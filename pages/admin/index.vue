@@ -23,7 +23,11 @@ export default {
   middleware: ['check-auth', 'auth'],
   computed: {
     loadedPosts() {
-      return this.$store.getters.loadedPosts
+      return this.$store.getters.loadedPosts.filter(
+        x =>
+          (x.category && this.selectedCategory.length == 0) ||
+          this.selectedCategory.includes(x.category)
+      )
     },
     loadedCategories() {
       return this.$store.getters.loadedCategories.filter(

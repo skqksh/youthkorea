@@ -18,7 +18,7 @@
 export default {
   computed: {
     loadedPosts() {
-      return this.$store.getters.loadedPosts
+      return this.$store.getters.loadedPosts.filter(x => x.category)
     },
     mainSlidePosts() {
       var posts = this.$store.getters.loadedPosts.filter(x => x.onMainSlide)

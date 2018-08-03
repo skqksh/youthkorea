@@ -2,21 +2,24 @@
   <v-container fluid>
     <v-form @submit.prevent="onSave">
 
-      <v-checkbox v-model="editedPost.onMainSlide" label="메인슬라이드 게시"></v-checkbox>
+      <div v-if="!editedPost.categoryCodeName">
 
-      <v-select v-model="editedPost.category" :items="loadedCategories" label="카테고리" item-text="name" item-value="id"></v-select>
-      
+        <v-checkbox v-model="editedPost.onMainSlide" label="메인슬라이드 게시"></v-checkbox>
+
+        <v-select v-model="editedPost.category" :items="loadedCategories" label="카테고리" item-text="name" item-value="id"></v-select>
+
+      </div>
       <AppControlInput v-model="editedPost.title" label="제목" required></AppControlInput>
 
-      <AppControlInput v-model="editedPost.previewText" label="부제목"></AppControlInput>
+        <AppControlInput v-model="editedPost.previewText" label="부제목"></AppControlInput>
 
-      <AppControlInput v-model="editedPost.thumbnail" label="이미지URL"></AppControlInput>
-      <div v-if="editedPost.thumbnail">
-        미리보기
-        <div>
-          <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+        <AppControlInput v-model="editedPost.thumbnail" label="이미지URL"></AppControlInput>
+        <div v-if="editedPost.thumbnail">
+          미리보기
+          <div>
+            <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+          </div>
         </div>
-      </div>
       <AppControlInput control-type="textarea" v-model="editedPost.content" label="내용" required></AppControlInput>
 
       <AppButton type="submit">Save</AppButton>

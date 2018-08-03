@@ -19,7 +19,7 @@ export default {
     loadedPosts() {
       return this.$store.getters.loadedPosts.filter(
         x =>
-          this.selectedCategory.length == 0 ||
+          (x.category && this.selectedCategory.length == 0) ||
           this.selectedCategory.includes(x.category)
       )
     },
