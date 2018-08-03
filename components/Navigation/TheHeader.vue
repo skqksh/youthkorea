@@ -146,6 +146,15 @@ export default {
         this.moveTo(val)
       }
     }
+  },
+  mounted() {
+    if (process.env.NODE_ENV === this.CONST.DEVELOPMENT) {
+      this.navList.push({
+        icon: 'vpn_key',
+        click: '/admin',
+        text: '관리자페이지'
+      })
+    }
   }
 }
 </script>

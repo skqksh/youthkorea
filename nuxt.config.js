@@ -99,7 +99,7 @@ module.exports = {
     fbAPIKey: dbconn.fbAPIKey
   },
 
-  dev: true,
+  dev: (process.env.NODE_ENV !== 'production'),
 
   router: {
     middleware: 'log'

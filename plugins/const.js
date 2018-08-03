@@ -1,7 +1,8 @@
 import Vue from 'vue'
 
-Vue.prototype.CONST = {
-
+const CONST = {
+  PRODUCTION: "production",
+  DEVELOPMENT: "development",
   CATEGORY: {
     ORG_GREETING: "orggreeting", //인사말
     ORG_HISTORY: "orghistory", //연혁
@@ -10,4 +11,10 @@ Vue.prototype.CONST = {
   }
 
 
+}
+
+Vue.prototype.CONST = CONST
+
+export default {
+  ...CONST
 }

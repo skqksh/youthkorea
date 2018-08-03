@@ -10,6 +10,7 @@
         <AppControlInput type="password" v-model="password" label="암호"></AppControlInput>
         <AppButton type="submit">{{ isLogin ? 'Login' : 'Sign Up' }}</AppButton>
         <AppButton
+          v-if="isDev"
           type="button"
           btn-style="inverted"
           style="margin-left: 10px"
@@ -27,6 +28,7 @@ export default {
   layout: 'admin',
   data() {
     return {
+      isDev: false,
       isLogin: true,
       email: '',
       password: ''
@@ -43,6 +45,11 @@ export default {
         .then(() => {
           this.$router.push('/admin')
         })
+    }
+  },
+  mounted() {
+    if (process.env.NODE_ENV === this.CONST.DEVELOPMENT) {
+      this.isDev = true
     }
   }
 }
