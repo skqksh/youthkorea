@@ -2,7 +2,7 @@
   <v-layout>
     <v-flex xs12>
 
-    <v-carousel id="mainCarousel">
+    <v-carousel id="mainCarousel" :style="{height:carouselHeight}">
       <nuxt-link v-for="(item,i) in mainSlidePosts" :key="i" :to="postLink('/posts/'+item.id)">
         <v-carousel-item :src="item.thumbnail" class="mainCarouselItem">
         </v-carousel-item>
@@ -23,6 +23,20 @@ export default {
     mainSlidePosts() {
       var posts = this.$store.getters.loadedPosts.filter(x => x.onMainSlide)
       return posts
+    },
+    carouselHeight() {
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+          return '220px'
+        case 'sm':
+          return '400px'
+        case 'md':
+          return '500px'
+        case 'lg':
+          return '600px'
+        case 'xl':
+          return '800px'
+      }
     }
   },
   methods: {
@@ -40,7 +54,4 @@ export default {
 </script>
 
 <style scoped>
-#mainCarousel {
-  max-height: 400px;
-}
 </style>
