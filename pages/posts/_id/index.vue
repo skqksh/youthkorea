@@ -10,12 +10,13 @@
         <v-layout>
           <v-flex>
             <h1>{{loadedPost.title}}</h1>
+            {{loadedPost.updatedDate | date}}
+            <hr>
             <div>
-              <div>Last Updated on {{loadedPost.updatedDate | date}}</div>
-              <div>Written by Name {{loadedPost.author}}</div>
+
+
             </div>
             <p>{{loadedPost.content}}</p>
-            <p>Let men know shat you think about th e post, send maile to test@naver.com</p>
           </v-flex>
         </v-layout>
       </v-flex>
