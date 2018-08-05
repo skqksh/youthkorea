@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer :value="drawer" :right="isRight" fixed app :width="$vuetify.breakpoint.xsOnly? 200:300">
+  <v-navigation-drawer :value="drawer" :right="isRight" fixed :app="!isRight" :width="$vuetify.breakpoint.xsOnly? 200:300">
     <v-list dense>
       <template v-for="item in items">
         <v-list-group v-if="item.children" v-model="item.model" :key="item.text" :prepend-icon="item.model ? item.icon : item['icon-alt']"
