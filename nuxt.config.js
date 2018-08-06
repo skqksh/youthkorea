@@ -35,10 +35,13 @@ module.exports = {
       {
         rel: 'stylesheet',
         href: 'https://fonts.googleapis.com/css?family=Righteous'
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://use.fontawesome.com/releases/v5.2.0/css/all.css'
       }
     ]
   },
-
   /*
    ** Customize the progress-bar color
    페이지 이동간의 로딩바를 설정 할 수 있음

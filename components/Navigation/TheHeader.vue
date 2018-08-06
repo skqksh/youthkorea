@@ -7,7 +7,7 @@
        -->
 
     <Drawer :items="navList" isRight :drawer="drawerRight" class="hidden-md-and-up" />
-    <v-toolbar :clipped-right="$vuetify.breakpoint.lgAndUp" color="blue darken-3" dark app fixed>
+    <v-toolbar :clipped-right="$vuetify.breakpoint.lgAndUp" color="blue darken-2" dark app fixed>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
         <v-icon @click.stop="drawer = !drawer" v-if="isAdmin">list&nbsp;&nbsp;</v-icon>
         <nuxt-link to="/"> 한국청소년문화원</nuxt-link>
