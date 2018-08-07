@@ -58,15 +58,29 @@
           <v-form @submit.prevent="onSubmitted">
             <div v-if="this.$store.getters.isDev">
               <br>id:
-              <input type="text" :value="editMenu.id" style="border:1px solid" readonly> 
+              <input type="text" :value="editMenu.id" style="border:1px solid" readonly>
               <br> parentId:
               <input type="text" :value="editMenu.parentId" style="border:1px solid" readonly>
+              <br> depth:
+               <input type="text" :value="editMenu.depth" style="border:1px solid" readonly>
               <br> order:
               <input type="text" v-model="editMenu.order" style="border:1px solid">
-
             </div>
-            <AppControlInput v-model="editMenu.name" label="메뉴명" :readonly="selectedMenu.selectedOption.value===DELETE"></AppControlInput>
-            <AppButton id="submitBtn" type="submit" :loading="isLoading">확인</AppButton>
+            <AppControlInput v-model="editMenu.name" label="메뉴명" :readonly="selectedMenu.selectedOption.value===DELETE" ></AppControlInput>
+            <v-layout row wrap v-if="selectedMenu.id&&selectedMenu.selectedOption.value === EDIT">
+              <v-flex xs12>순서 <span style="color:red">(변경시 메뉴명과 함께 즉시반영됨)</span>  </v-flex>
+              <v-flex xs12>  
+                <AppButton type="button" @click="changeOrder(false)">
+                <v-icon>expand_more</v-icon>
+              </AppButton>
+              <AppButton type="button" @click="changeOrder(true)">
+                <v-icon>expand_less</v-icon>
+              </AppButton>
+              </v-flex>
+            </v-layout>
+            <v-layout>
+              <AppButton id="submitBtn" type="submit" :loading="isLoading">확인</AppButton>
+            </v-layout>
           </v-form>
         </v-card>
       </v-flex>
@@ -76,13 +90,8 @@
         <br> editMenu:{{editMenu}}
         <br> ========================
         <br>loadedMenus : {{loadedMenus}}
-        <pre>
-          =================================
-    TODO list
-               - 순서변경 가능하도록 할것
-               - 3단계이상 하위메뉴 만들수 없도록 할 것 
-        </pre>
-          
+           <br> ========================
+        <br>menus : {{menus}}
       </div>
     </v-layout>
   </v-container>
@@ -113,20 +122,7 @@ export default {
       this.selectedMenu = {
         id: '',
         name: '',
-        options: [
-          {
-            text: '메뉴 수정',
-            value: 'edit'
-          },
-          {
-            text: '하위메뉴 추가',
-            value: 'addChildren'
-          },
-          {
-            text: '메뉴 제거',
-            value: 'delete'
-          }
-        ],
+        options: [],
         selectedOption: {
           text: '메뉴 수정',
           value: 'edit'
@@ -226,6 +222,7 @@ export default {
     },
     changeSelectedMenu() {
       this.changeSelectMenuOption()
+      this.getSelectedMenuOptionList()
     },
     changeSelectMenuOption() {
       var selectedMenu = this.getSelectedMenu()
@@ -258,6 +255,65 @@ export default {
         return this.menus.filter(x => x.parentId == parentId).length
       } else {
         return this.menus.length
+      }
+    },
+    changeOrder(isUp) {
+      var menuGroup = this.menus
+        .filter(x => x.parentId === this.editMenu.parentId)
+        .sort((a, b) => this.CONST.sortFunc(a, b, 'order', true))
+
+      if (menuGroup.length < 1) {
+        return
+      }
+
+      var targetIndex = menuGroup.findIndex(x => x.id === this.editMenu.id)
+      if (isUp && targetIndex < 1) {
+        return
+      } else if (!isUp && targetIndex + 1 >= menuGroup.length) {
+        return
+      }
+
+      menuGroup = this.CONST.ArrayMove(
+        menuGroup,
+        targetIndex,
+        targetIndex + (isUp ? -1 : 1)
+      )
+      menuGroup.forEach((x, i) => {
+        x.order = i
+        this.$store.dispatch('editMenu', x).then(() => {})
+      })
+    },
+    getSelectedMenuOptionList() {
+      if (this.editMenu.depth < 2) {
+        this.selectedMenu.options = [
+          {
+            text: '메뉴 수정',
+            value: 'edit'
+          },
+          {
+            text: '하위메뉴 추가',
+            value: 'addChildren'
+          },
+          {
+            text: '메뉴 제거',
+            value: 'delete'
+          }
+        ]
+      } else {
+        this.selectedMenu.selectedOption = {
+          text: '메뉴 수정',
+          value: 'edit'
+        }
+        this.selectedMenu.options = [
+          {
+            text: '메뉴 수정',
+            value: 'edit'
+          },
+          {
+            text: '메뉴 제거',
+            value: 'delete'
+          }
+        ]
       }
     }
   },
