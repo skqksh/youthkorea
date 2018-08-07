@@ -118,6 +118,11 @@ export default {
         ]
       },
       {
+        icon: 'vertical_split',
+        click: '/admin/setting/menu',
+        text: '메뉴 설정'
+      },
+      {
         icon: 'view_comfy',
         click: '/admin/setting/category',
         text: '카테고리 설정'

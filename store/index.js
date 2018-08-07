@@ -6,15 +6,19 @@ const createStore = () => {
     state: {
       loadedPosts: [],
       loadedCategories: [],
+      loadedMenus: [],
       token: null,
+      isDev: false
     },
     mutations: {
+      //==================== category start =====================
       setCategory(state, categoryList) {
         state.loadedCategories = categoryList
       },
       addCategory(state, category) {
         state.loadedCategories.push(category)
       },
+      //==================== posts start =====================
       setPosts(state, posts) {
         state.loadedPosts = posts
       },
@@ -23,9 +27,24 @@ const createStore = () => {
       },
       editPost(state, editPost) {
         const postIndex = state.loadedPosts.findIndex(post => post.id === editPost.id);
-        state.loadedPosts[postIndex] = editPost
-
+        state.load
+        edPosts[postIndex] = editPost
       },
+      //==================== menu start =====================
+      setMenus(state, menus) {
+        state.loadedMenus = menus
+      },
+      addMenu(state, menu) {
+        state.loadedMenus.push(menu)
+      },
+      editMenu(state, editMenu) {
+        const menuIndex = state.loadedMenus.findIndex(item => item.id === editMenu.id);
+        state.loadedMenus[menuIndex] = editMenu
+      },
+      delMenu(state, menuId) {
+        state.loadedMenus = state.loadedMenus.filter(x => x.id !== menuId)
+      },
+      //==================== etc start =====================
       setToken(state, token) {
         state.token = token;
       },
@@ -36,13 +55,48 @@ const createStore = () => {
     },
     actions: {
       async nuxtServerInit(vuexContext, context) {
+        this.state.isDev = process.env.NODE_ENV === "development"
         /*
         디버깅모드에서 debugger 를 이용하여 디버깅가능        
         */
         //debugger;
         //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용        
         await vuexContext.dispatch('getPosts')
-        await vuexContext.dispatch('getCategory')
+        await vuexContext.dispatch('getCategories')
+        await vuexContext.dispatch('getMenus')
+      },
+      //==================== posts start =====================
+      addPost(vuexContext, post) {
+        const createdPost = {
+          ...post,
+          updatedDate: new Date()
+        }
+
+        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
+        return this.$axios.$post('/posts.json?auth=' + vuexContext.state.token, createdPost)
+          .then(data => {
+
+            vuexContext.commit('addPost', { ...createdPost,
+              id: data.name
+            })
+          })
+          .catch(e => console.log(e))
+      },
+      editPost(vuexContext, editedPost) {
+        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
+        //firebase .write rule 이 auth!=null 인경우
+        //https://firebase.google.com/docs/database/rest/auth 설명참고
+        //쿼리 파라미터 필요함
+        return this.$axios.$put('/posts/' + editedPost.id + '.json?auth=' + vuexContext.state.token, {
+            ...editedPost
+          })
+          .then(data => {
+            vuexContext.commit('editPost', editedPost)
+          })
+          .catch(error => console.log(error))
+      },
+      setPosts(vuexContext, posts) {
+        vuexContext.commit('setPosts', posts)
       },
       getPosts(vuexContext) {
 
@@ -60,7 +114,8 @@ const createStore = () => {
           })
           .catch(e => context.error(e))
       },
-      getCategory(vuexContext) {
+      //==================== category start =====================
+      getCategories(vuexContext) {
 
         return this.$axios
           .$get('/category.json')
@@ -100,37 +155,54 @@ const createStore = () => {
         }
         return true;
       },
-      addPost(vuexContext, post) {
-        const createdPost = {
-          ...post,
+      //==================== menu start =====================
+      getMenus(vuexContext) {
+
+        return this.$axios
+          .$get('/menu.json')
+          .then(data => {
+            const menus = [];
+            for (const key in data) {
+              menus.push({ ...data[key],
+                id: key
+              })
+            }
+            vuexContext.commit('setMenus', menus)
+          })
+          .catch(e => console.log(e))
+      },
+      addMenu(vuexContext, menu) {
+        const createdMenu = {
+          ...menu,
           updatedDate: new Date()
         }
-        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
-        return this.$axios.$post('/posts.json?auth=' + vuexContext.state.token, createdPost)
+
+        return this.$axios.$post('/menu.json?auth=' + vuexContext.state.token, createdMenu)
           .then(data => {
 
-            vuexContext.commit('addPost', { ...createdPost,
+            vuexContext.commit('addMenu', { ...createdMenu,
               id: data.name
             })
           })
           .catch(e => console.log(e))
       },
-      editPost(vuexContext, editedPost) {
-        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
-        //firebase .write rule 이 auth!=null 인경우
-        //https://firebase.google.com/docs/database/rest/auth 설명참고
-        //쿼리 파라미터 필요함
-        return this.$axios.$put('/posts/' + editedPost.id + '.json?auth=' + vuexContext.state.token, {
-            ...editedPost
+      editMenu(vuexContext, editedMenu) {
+        return this.$axios.$put('/menu/' + editedMenu.id + '.json?auth=' + vuexContext.state.token, {
+            ...editedMenu
           })
           .then(data => {
-            vuexContext.commit('editPost', editedPost)
+            vuexContext.commit('editMenu', editedMenu)
           })
           .catch(error => console.log(error))
       },
-      setPosts(vuexContext, posts) {
-        vuexContext.commit('setPosts', posts)
+      delMenu(vuexContext, menu) {
+        return this.$axios.$delete('/menu/' + menu.id + '.json?auth=' + vuexContext.state.token)
+          .then(data => {
+            vuexContext.commit('delMenu', menu.id)
+          })
+          .catch(error => console.log(error))
       },
+      //==================== etc start =====================
       authenticateUser(vuexContext, authData) {
         //sign in url : https://firebase.google.com/docs/reference/rest/auth/#section-create-email-password
         //login url : https://firebase.google.com/docs/reference/rest/auth/#section-sign-in-email-password
@@ -224,8 +296,14 @@ const createStore = () => {
           return 0
         })
       },
+      loadedMenus(state) {
+        return state.loadedMenus
+      },
       isAuthenticated(state) {
         return state.token != null
+      },
+      isDev(state) {
+        return state.isDev
       }
     }
   })
