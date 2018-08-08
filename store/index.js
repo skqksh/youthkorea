@@ -27,8 +27,7 @@ const createStore = () => {
       },
       editPost(state, editPost) {
         const postIndex = state.loadedPosts.findIndex(post => post.id === editPost.id);
-        state.load
-        edPosts[postIndex] = editPost
+        state.loadedPosts[postIndex] = editPost
       },
       //==================== menu start =====================
       setMenus(state, menus) {

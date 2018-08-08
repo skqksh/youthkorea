@@ -24,12 +24,7 @@ export default {
       )
     },
     loadedCategories() {
-      return this.$store.getters.loadedCategories.filter(
-        x =>
-          x.sysCodeName !== this.CONST.CATEGORY.ORG_GREETING &&
-          x.sysCodeName !== this.CONST.CATEGORY.ORG_HISTORY &&
-          x.sysCodeName !== this.CONST.CATEGORY.ORG_CHART
-      )
+      return this.$store.getters.loadedCategories
     }
   }
 }

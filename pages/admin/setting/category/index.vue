@@ -8,9 +8,8 @@
         <AppButton type="button" @click="delSelectedCategory" btn-style="error">선택카테고리제거</AppButton>
         <v-list>
           <v-list-tile v-for="(item,index) in loadedCategories" :key="index">
-            <v-list-tile-action>
-              <v-icon v-if="item.isSysCode">star</v-icon>
-              <v-checkbox v-else :value="item.id" v-model="selectedCategory"></v-checkbox>
+            <v-list-tile-action>              
+              <v-checkbox :value="item.id" v-model="selectedCategory"></v-checkbox>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title v-text="item.name"></v-list-tile-title>
@@ -39,9 +38,7 @@ export default {
   data() {
     return {
       newCategory: {
-        name: '',
-        isSysCode: false,
-        sysCodeName: ''
+        name: ''
       },
       selectedCategory: []
     }

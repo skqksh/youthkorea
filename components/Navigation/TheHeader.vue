@@ -72,11 +72,6 @@ export default {
         name: '관리자메인'
       },
       {
-        icon: 'edit',
-        click: '/admin/new-post',
-        name: '새글 작성'
-      },
-      {
         icon: 'vertical_split',
         click: '/admin/setting/menu',
         name: '메뉴 설정'
@@ -85,6 +80,22 @@ export default {
         icon: 'view_comfy',
         click: '/admin/setting/category',
         name: '카테고리 설정'
+      },
+      {
+        icon: 'fas fa-clipboard-list',
+        name: '게시판 관리',
+        children: [
+          {
+            icon: 'far fa-edit',
+            click: '/admin/new-post',
+            name: '새글 작성'
+          },
+          {
+            icon: 'fas fa-edit',
+            click: '/admin/post-list',
+            name: '게시글목록 / 수정'
+          }
+        ]
       },
       {
         icon: 'exit_to_app',

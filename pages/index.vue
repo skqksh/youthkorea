@@ -18,10 +18,12 @@
 export default {
   computed: {
     loadedPosts() {
-      return this.$store.getters.loadedPosts.filter(x => x.category)
+      return this.$store.getters.loadedPosts.filter(
+        x => x.menuType === this.CONST.MENUTYPE.MULTI
+      )
     },
     mainSlidePosts() {
-      var posts = this.$store.getters.loadedPosts.filter(x => x.onMainSlide)
+      var posts = this.loadedPosts.filter(x => x.onMainSlide)
       return posts
     },
     carouselHeight() {
@@ -33,9 +35,8 @@ export default {
         case 'md':
           return '500px'
         case 'lg':
-          return '600px'
         case 'xl':
-          return '800px'
+          return '600px'
       }
     }
   },

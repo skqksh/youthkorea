@@ -3,11 +3,20 @@ import Vue from 'vue'
 const CONST = {
   PRODUCTION: "production",
   DEVELOPMENT: "development",
-  CATEGORY: {
-    ORG_GREETING: "orggreeting", //인사말
-    ORG_HISTORY: "orghistory", //연혁
-    ORG_CHART: "orgchart", //조직도
-
+  MENUTYPE: {
+    SINGLE: 'single',
+    MULTI: 'multi'
+  },
+  menuType() {
+    return [{
+        text: "페이지",
+        value: CONST.MENUTYPE.SINGLE
+      },
+      {
+        text: "게시판",
+        value: CONST.MENUTYPE.MULTI
+      },
+    ]
   },
   ArrayMove: function (array, from, to) {
     const newArray = [...array];
@@ -56,12 +65,14 @@ const CONST = {
         mappedElem = mappedArr[id];
         // If the element is not at the root level, add it to its parent array of children.
         if (mappedElem.parentId) {
+          mappedElem['familyName'] = mappedArr[mappedElem['parentId']]['familyName'] + "-" + mappedElem.name
           mappedElem['depth'] = mappedArr[mappedElem['parentId']]['depth'] + 1
           mappedArr[mappedElem['parentId']]['children'].push(mappedElem)
           mappedArr[mappedElem['parentId']]['children'].sort((a, b) => this.sortFunc(a, b, "order", true))
         }
         // If the element is at the root level, add it to first level elements array.
         else {
+          mappedElem['familyName'] = mappedElem.name
           tree.push(mappedElem);
           tree.sort((a, b) => this.sortFunc(a, b, "order", true))
         }

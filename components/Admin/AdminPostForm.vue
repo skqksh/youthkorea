@@ -4,7 +4,9 @@
 
       <div v-if="!editedPost.categoryCodeName">
 
-        <v-checkbox v-model="editedPost.onMainSlide" label="메인슬라이드 게시"></v-checkbox>
+        <v-checkbox v-model="editedPost.onMainSlide" label="메인슬라이드 게시" ></v-checkbox>
+
+        <v-select v-model="editedPost.menuId" :items="menus" label="게시판"  item-text="familyName" item-value="id"></v-select>
 
         <v-select v-model="editedPost.category" :items="loadedCategories" label="카테고리" item-text="name" item-value="id"></v-select>
 
@@ -40,6 +42,7 @@ export default {
   },
   data() {
     return {
+      menus: [],
       editedPost: this.post
         ? {
             ...this.post
@@ -52,7 +55,9 @@ export default {
             previewText: '',
             onMainSlide: false,
             category: '',
-            categoryCodeName: ''
+            categoryCodeName: '',
+            menuId: '',
+            menuType: this.CONST.MENUTYPE.MULTI
           }
     }
   },
@@ -66,13 +71,13 @@ export default {
   },
   computed: {
     loadedCategories() {
-      return this.$store.getters.loadedCategories.filter(
-        x =>
-          x.sysCodeName !== this.CONST.CATEGORY.ORG_GREETING &&
-          x.sysCodeName !== this.CONST.CATEGORY.ORG_HISTORY &&
-          x.sysCodeName !== this.CONST.CATEGORY.ORG_CHART
-      )
+      return this.$store.getters.loadedCategories
     }
+  },
+  created() {
+    this.menus = this.$store.getters.loadedMenus
+      .filter(x => x.menuType === this.CONST.MENUTYPE.MULTI)
+      .sort((a, b) => this.CONST.sortFunc(a, b, 'order', true))
   }
 }
 </script>

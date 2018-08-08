@@ -66,6 +66,7 @@
               <br> order:
               <input type="text" v-model="editMenu.order" style="border:1px solid">
             </div>
+            <v-select v-model="editMenu.menuType" :items="menuType" item-text="text" item-value="value" label="메뉴타입" :readonly="selectedMenu.selectedOption.value===DELETE" ></v-select>
             <AppControlInput v-model="editMenu.name" label="메뉴명" :readonly="selectedMenu.selectedOption.value===DELETE" ></AppControlInput>
             <v-layout row wrap v-if="selectedMenu.id&&selectedMenu.selectedOption.value === EDIT">
               <v-flex xs12>순서 <span style="color:red">(변경시 메뉴명과 함께 즉시반영됨)</span>  </v-flex>
@@ -112,7 +113,8 @@ export default {
       menus: [],
       selectedMenu: {},
       editMenu: {},
-      isLoading: false
+      isLoading: false,
+      menuType: this.CONST.menuType()
     }
   },
   created() {
@@ -139,8 +141,13 @@ export default {
       this.editMenu = {
         name: '',
         parentId: '',
-        order: this.getOrder()
+        order: this.getOrder(),
+        menuType: {
+          text: '단일페이지',
+          value: 'single'
+        }
       }
+      this.menus = JSON.parse(JSON.stringify(this.$store.getters.loadedMenus))
     },
     onSubmitted() {
       let menu = this.editMenu
@@ -151,10 +158,11 @@ export default {
         return false
       }
 
-      //메뉴 추가시 유효성검사
+      //메뉴 추가 / 수정 시 유효성검사
       if (
         this.selectedMenu.selectedOption.value === '' ||
-        this.selectedMenu.selectedOption.value === this.ADDCHILDREN
+        this.selectedMenu.selectedOption.value === this.ADDCHILDREN ||
+        this.selectedMenu.selectedOption.value === this.EDIT
       ) {
         if (
           this.menus.filter(
@@ -166,20 +174,8 @@ export default {
         ) {
           alert('중복된 메뉴가 존재합니다.')
           return false
-        }
-      }
-
-      //메뉴 수정시 유효성검사
-      if (this.selectedMenu.selectedOption.value === this.EDIT) {
-        if (
-          this.menus.filter(
-            x =>
-              x.id !== menu.id &&
-              x.name === menu.name &&
-              x.parentId === menu.parentId
-          ).length > 0
-        ) {
-          alert('중복된 메뉴가 존재합니다.')
+        } else if (!menu.menuType) {
+          alert('메뉴타입을 선택해 주세요')
           return false
         }
       }

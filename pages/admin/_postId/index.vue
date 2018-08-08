@@ -31,12 +31,8 @@ export default {
   },
   methods: {
     onSubmitted(editedPost) {
-      if (!editedPost.category) {
-        alert('카테고리를 선택해 주세요')
-        return false
-      }
       this.$store.dispatch('editPost', editedPost).then(() => {
-        this.$router.push('/admin')
+        this.$router.push('/admin/post-list')
       })
     }
   }
