@@ -6,7 +6,7 @@
         
        -->
 
-    <Drawer :items="navList" isRight :drawer="drawerRight" class="hidden-md-and-up" />
+    <Drawer :items="loadedMenus" isRight :drawer="drawerRight" class="hidden-md-and-up" />
     <v-toolbar :clipped-right="$vuetify.breakpoint.lgAndUp" color="blue darken-2" dark app fixed>
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
         <v-icon @click.stop="drawer = !drawer" v-if="isAdmin">list&nbsp;&nbsp;</v-icon>
@@ -14,31 +14,34 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight" class="hidden-md-and-up"></v-toolbar-side-icon>
+
       <v-toolbar-items class="hidden-sm-and-down">
-        <template v-for="(item, index) in navList">
-          <v-menu v-if="item.children" :key="index">
-            <v-btn slot="activator" flat>
-              {{item.text}}
+        <v-btn flat v-for="(menu, index) in loadedMenus" :key="index" @click="clickMenu(menu.id)">
+          {{menu.name}}
+        </v-btn>
+
+      </v-toolbar-items>
+      <v-tabs v-if="subMenuNav.length>0&&$vuetify.breakpoint.mdAndUp" slot="extension" color="transparent" centered slider-color="yellow">
+        <template v-for="subMenu in subMenuNav">
+          <v-menu v-if="subMenu.children.length>0"  class="v-tabs__div"  offset-y right :key="subMenu.id">
+            <v-btn flat slot="activator">
+              {{subMenu.name}}
               <v-icon>arrow_drop_down</v-icon>
             </v-btn>
             <v-list>
-              <v-list-tile v-for="(child, i) in item.children" :key="i" @click="navTo(child.click)">
-                <v-list-tile-content>
-                  <v-list-tile-title>
-                    {{ child.text }}
-                  </v-list-tile-title>
-                </v-list-tile-content>
+              <v-list-tile v-for="subsubMenu in subMenu.children" :key="subsubMenu.id">
+                {{ subsubMenu.name }}
               </v-list-tile>
             </v-list>
           </v-menu>
-          <v-btn v-else flat @click="navTo(item.click)" :key="index">
-            {{item.text}}
-          </v-btn>
+          <v-tab v-else :key="subMenu.id">
+            {{subMenu.name}}
+          </v-tab>
         </template>
 
-      </v-toolbar-items>
+      </v-tabs>
     </v-toolbar>
-    <Drawer :items="adminNavList" :drawer="drawer" v-if="isAdmin" />   
+    <Drawer :items="adminNavList" :drawer="drawer" v-if="isAdmin" />
   </div>
 </template>
 
@@ -59,78 +62,34 @@ export default {
   data: () => ({
     drawerRight: false,
     drawer: true,
-    navList: [
-      {
-        icon: 'grade',
-        click: '/posts',
-        text: '활동'
-      },
-      {
-        text: '소개',
-        children: [
-          {
-            icon: 'pan_tool',
-            text: '인사말',
-            click: '/about/' + CONST.CATEGORY.ORG_GREETING
-          },
-          {
-            icon: 'group',
-            text: '조직도',
-            click: '/about/' + CONST.CATEGORY.ORG_CHART
-          },
-          {
-            icon: 'account_balance',
-            text: '연혁',
-            click: '/about/' + CONST.CATEGORY.ORG_HISTORY
-          }
-        ]
-      }
-    ],
+    menus: [],
+    loadedMenus: [],
+    subMenuNav: [],
     adminNavList: [
       {
         icon: 'web',
         click: '/admin',
-        text: '관리자메인'
+        name: '관리자메인'
       },
       {
         icon: 'edit',
         click: '/admin/new-post',
-        text: '새글 작성'
-      },
-      {
-        text: '소개',
-        children: [
-          {
-            icon: 'pan_tool',
-            text: '인사말',
-            click: '/admin/setting/introduce/' + CONST.CATEGORY.ORG_GREETING
-          },
-          {
-            icon: 'group',
-            text: '조직도',
-            click: '/admin/setting/introduce/' + CONST.CATEGORY.ORG_CHART
-          },
-          {
-            icon: 'account_balance',
-            text: '연혁',
-            click: '/admin/setting/introduce/' + CONST.CATEGORY.ORG_HISTORY
-          }
-        ]
+        name: '새글 작성'
       },
       {
         icon: 'vertical_split',
         click: '/admin/setting/menu',
-        text: '메뉴 설정'
+        name: '메뉴 설정'
       },
       {
         icon: 'view_comfy',
         click: '/admin/setting/category',
-        text: '카테고리 설정'
+        name: '카테고리 설정'
       },
       {
         icon: 'exit_to_app',
         click: 'onLogout',
-        text: '로그아웃'
+        name: '로그아웃'
       }
     ]
   }),
@@ -150,16 +109,17 @@ export default {
       } else {
         this.moveTo(val)
       }
+    },
+    clickMenu(id) {
+      this.subMenuNav = this.menus.filter(x => x.parentId === id)
     }
   },
-  mounted() {
-    if (process.env.NODE_ENV === this.CONST.DEVELOPMENT) {
-      this.navList.push({
-        icon: 'vpn_key',
-        click: '/admin',
-        text: '관리자페이지'
-      })
-    }
+  mounted() {},
+  created() {
+    this.menus = this.$store.getters.loadedMenus.sort((a, b) =>
+      this.CONST.sortFunc(a, b, 'order', true)
+    )
+    this.loadedMenus = this.CONST.unflatten(this.$store.getters.loadedMenus)
   }
 }
 </script>

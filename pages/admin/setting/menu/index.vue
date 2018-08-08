@@ -109,6 +109,7 @@ export default {
       DELETE: 'delete',
 
       //========fields==========
+      menus: [],
       selectedMenu: {},
       editMenu: {},
       isLoading: false
@@ -116,6 +117,13 @@ export default {
   },
   created() {
     this.initItems()
+    //json데이터로 한번 변환한다음 리턴하여, store에 있는데이터와의 바인딩을 제거한다
+    this.menus = JSON.parse(JSON.stringify(this.$store.getters.loadedMenus))
+  },
+  computed: {
+    loadedMenus() {
+      return this.CONST.unflatten(this.menus)
+    }
   },
   methods: {
     initItems() {
@@ -315,14 +323,6 @@ export default {
           }
         ]
       }
-    }
-  },
-  computed: {
-    menus() {
-      return this.$store.getters.loadedMenus
-    },
-    loadedMenus() {
-      return this.CONST.unflatten(this.menus)
     }
   }
 }
