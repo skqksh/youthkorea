@@ -3,7 +3,7 @@
     <v-list dense>
       <template v-for="item in items">
         <v-list-group v-if="item.children&&item.children.length>0" v-model="item.model" :key="item.name">
-          <v-list-tile slot="activator">
+          <v-list-tile slot="activator" @click="isAdmin?'':clickMenu(item.id)">
             <v-list-tile-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
@@ -16,7 +16,7 @@
           <template v-for="subMenu in item.children">
             <v-list-group v-if="subMenu.children&&subMenu.children.length>0" v-model="subMenu.model" sub-group :key="subMenu.name" class="grey lighten-4"
               prepend-icon="" append-icon="">
-              <v-list-tile slot="activator">
+              <v-list-tile slot="activator" @click="isAdmin?navTo(subMenu.click):clickMenu(subMenu.id)">
                 <v-list-tile-action>
                 </v-list-tile-action>
                 <v-list-tile-content>
@@ -26,7 +26,7 @@
                 </v-list-tile-content>
               </v-list-tile>
 
-              <v-list-tile v-if="subMenu.children" v-for="subsubMenu in subMenu.children" :key="subsubMenu.name" class="grey lighten-2">
+              <v-list-tile v-if="subMenu.children" v-for="subsubMenu in subMenu.children" :key="subsubMenu.name" class="grey lighten-2" @click="clickMenu(subsubMenu.id)">
                 <v-list-tile-action/>
                 <v-list-tile-action>
 
@@ -37,7 +37,7 @@
 
               </v-list-tile>
             </v-list-group>
-            <v-list-tile v-else :key="subMenu.name" @click="navTo(subMenu.click)">
+            <v-list-tile v-else :key="subMenu.name" @click="isAdmin?navTo(subMenu.click):clickMenu(subMenu.id)">
               <v-list-tile-action/>
               <v-list-tile-action>
                 <v-icon>{{ subMenu.icon }}</v-icon>
@@ -50,7 +50,7 @@
             </v-list-tile>
           </template>
         </v-list-group>
-        <v-list-tile v-else :key="item.name" @click="navTo(item.click)">
+        <v-list-tile v-else :key="item.name" @click="isAdmin?navTo(item.click):clickMenu(item.id)">
           <v-list-tile-action>
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-tile-action>
@@ -79,6 +79,10 @@ export default {
     isRight: {
       type: Boolean,
       default: false
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -96,6 +100,14 @@ export default {
         }
       } else {
         this.moveTo(val)
+      }
+    },
+    clickMenu(id) {
+      let theMenu = this.$store.getters.loadedMenus.find(x => x.id === id)
+      if (theMenu.menuType === this.CONST.MENUTYPE.SINGLE) {
+        this.$router.push('/menu/page/' + id)
+      } else if (theMenu.menuType === this.CONST.MENUTYPE.MULTI) {
+        this.$router.push('/menu/board/' + id)
       }
     }
   }

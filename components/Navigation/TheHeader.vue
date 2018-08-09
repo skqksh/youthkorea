@@ -16,32 +16,32 @@
       <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight" class="hidden-md-and-up"></v-toolbar-side-icon>
 
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat v-for="(menu, index) in loadedMenus" :key="index" @click="clickMenu(menu.id)">
-          {{menu.name}}
+        <v-btn flat v-for="(menu, index) in loadedMenus" :key="index" @click="clickMenu(menu.id);selectedMainMenu=menu.id">
+          {{menu.name}} 
         </v-btn>
 
       </v-toolbar-items>
       <v-tabs v-if="subMenuNav.length>0&&$vuetify.breakpoint.mdAndUp" slot="extension" color="transparent" centered slider-color="yellow">
         <template v-for="subMenu in subMenuNav">
           <v-menu v-if="subMenu.children.length>0"  class="v-tabs__div"  offset-y right :key="subMenu.id">
-            <v-btn flat slot="activator">
+            <v-btn flat slot="activator" @click="clickMenu(subMenu.id)">
               {{subMenu.name}}
               <v-icon>arrow_drop_down</v-icon>
             </v-btn>
             <v-list>
-              <v-list-tile v-for="subsubMenu in subMenu.children" :key="subsubMenu.id">
+              <v-list-tile v-for="subsubMenu in subMenu.children" :key="subsubMenu.id" @click="clickMenu(subsubMenu.id)">
                 {{ subsubMenu.name }}
               </v-list-tile>
             </v-list>
           </v-menu>
-          <v-tab v-else :key="subMenu.id">
+          <v-tab v-else :key="subMenu.id" @click="clickMenu(subMenu.id)">
             {{subMenu.name}}
           </v-tab>
         </template>
 
       </v-tabs>
     </v-toolbar>
-    <Drawer :items="adminNavList" :drawer="drawer" v-if="isAdmin" />
+    <Drawer :items="adminNavList" :drawer="drawer" v-if="isAdmin" isAdmin/>
   </div>
 </template>
 
@@ -62,9 +62,9 @@ export default {
   data: () => ({
     drawerRight: false,
     drawer: true,
+    selectedMainMenu: '',
     menus: [],
     loadedMenus: [],
-    subMenuNav: [],
     adminNavList: [
       {
         icon: 'web',
@@ -98,6 +98,17 @@ export default {
         ]
       },
       {
+        icon: 'far fa-newspaper',
+        name: '페이지 관리',
+        children: [
+          {
+            icon: 'fas fa-edit',
+            click: '/admin/page-list',
+            name: '페이지목록 / 수정'
+          }
+        ]
+      },
+      {
         icon: 'exit_to_app',
         click: 'onLogout',
         name: '로그아웃'
@@ -122,7 +133,20 @@ export default {
       }
     },
     clickMenu(id) {
-      this.subMenuNav = this.menus.filter(x => x.parentId === id)
+      let theMenu = this.menus.find(x => x.id === id)
+      if (theMenu.menuType === this.CONST.MENUTYPE.SINGLE) {
+        this.$router.push('/menu/page/' + id)
+      } else if (theMenu.menuType === this.CONST.MENUTYPE.MULTI) {
+        this.$router.push('/menu/board/' + id)
+      }
+    }
+  },
+  computed: {
+    subMenuNav() {
+      if (this.selectedMainMenu) {
+        return this.menus.filter(x => x.parentId === this.selectedMainMenu)
+      }
+      return []
     }
   },
   mounted() {},

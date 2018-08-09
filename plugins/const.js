@@ -4,6 +4,7 @@ const CONST = {
   PRODUCTION: "production",
   DEVELOPMENT: "development",
   MENUTYPE: {
+    BLOCK: 'block',
     SINGLE: 'single',
     MULTI: 'multi'
   },
@@ -16,6 +17,10 @@ const CONST = {
         text: "게시판",
         value: CONST.MENUTYPE.MULTI
       },
+      {
+        text: "단순메뉴",
+        value: CONST.MENUTYPE.BLOCK
+      }
     ]
   },
   ArrayMove: function (array, from, to) {
