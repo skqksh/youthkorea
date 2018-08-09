@@ -61,6 +61,8 @@
     <div v-if="this.$store.getters.isDev">
          <br> ========================
         <br> editedPost:{{editedPost}}
+          <br> ========================
+        <br> muliTypeMenus:{{muliTypeMenus}}
       </div>
   </v-container>
 
@@ -137,7 +139,12 @@ export default {
   },
   computed: {
     loadedCategories() {
-      return this.$store.getters.loadedCategories
+      return this.$store.getters.loadedCategories.filter(
+        x =>
+          x.limitedMenu &&
+          x.limitedMenu.filter(menu => menu.id === this.editedPost.menuId)
+            .length > 0
+      )
     }
   },
   created() {

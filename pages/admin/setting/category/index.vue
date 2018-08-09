@@ -10,7 +10,7 @@
           </h1>
 
           <v-list>
-            <v-list-tile v-for="item in categories" :key="item.id">
+            <v-list-tile v-for="item in categories" :key="item.id" style="height:30px">
               <v-list-tile-action>
                 <v-checkbox v-model="selectedCategory.id" :value="item.id" @change="changeSelectedCategory"></v-checkbox>
               </v-list-tile-action>
@@ -34,7 +34,11 @@
               <br>id:
               <input type="text" :value="editCategory.id" style="border:1px solid" readonly>
             </div>
+           
             <AppControlInput v-model="editCategory.name" label="카테고리명" :readonly="selectedCategory.selectedOption.value===DELETE"></AppControlInput>
+           
+            <v-select v-model="editCategory.limitedMenu" :items="boardMenus" label="카테고리 사용 게시판" item-text="familyName" chips  item-value="id"  multiple return-object
+              outline></v-select>
             <AppButton type="submit">확인</AppButton>
           </v-form>
         </v-card>
@@ -61,6 +65,7 @@ export default {
       DELETE: 'delete',
 
       //========fields==========
+      boardMenus: [],
       categories: [],
       selectedCategory: {},
       editCategory: {}
@@ -68,10 +73,6 @@ export default {
   },
   created() {
     this.initItems()
-    //json데이터로 한번 변환한다음 리턴하여, store에 있는데이터와의 바인딩을 제거한다
-    this.categories = JSON.parse(
-      JSON.stringify(this.$store.getters.loadedCategories)
-    )
   },
   methods: {
     initItems() {
@@ -85,11 +86,21 @@ export default {
         }
       }
       this.editCategory = {
-        name: ''
+        name: '',
+        limitedMenu: []
       }
       //json데이터로 한번 변환한다음 리턴하여, store에 있는데이터와의 바인딩을 제거한다
       this.categories = JSON.parse(
         JSON.stringify(this.$store.getters.loadedCategories)
+      )
+
+      //json데이터로 한번 변환한다음 리턴하여, store에 있는데이터와의 바인딩을 제거한다
+      this.boardMenus = JSON.parse(
+        JSON.stringify(
+          this.$store.getters.loadedMenus.filter(
+            x => x.menuType === this.CONST.MENUTYPE.MULTI
+          )
+        )
       )
     },
     changeSelectedCategory() {
@@ -109,7 +120,8 @@ export default {
         }
       } else {
         this.editCategory = {
-          name: ''
+          name: '',
+          limitedMenu: []
         }
       }
     },
@@ -154,13 +166,13 @@ export default {
         this.selectedCategory.selectedOption.value === this.ADDCHILDREN ||
         this.selectedCategory.selectedOption.value === this.EDIT
       ) {
-        for (var key in this.$store.getters.loadedCategories) {
-          if (
-            this.$store.getters.loadedCategories[key].name === category.name
-          ) {
-            alert('동일한 카테고리가 존재합니다.')
-            return false
-          }
+        if (
+          this.categories.filter(
+            x => x.id !== category.id && x.name === category.name
+          ).length > 0
+        ) {
+          alert('중복된 메뉴가 존재합니다.')
+          return false
         }
       }
 

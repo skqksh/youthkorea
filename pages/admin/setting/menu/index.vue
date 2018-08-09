@@ -11,7 +11,7 @@
           <v-list>
             <div v-for="menu in loadedMenus" :key="menu.id">
 
-              <v-list-tile>
+              <v-list-tile style="height:34px">
                 <v-list-tile-action>
                   <v-checkbox v-model="selectedMenu.id" :value="menu.id" @change="changeSelectedMenu"></v-checkbox>
                 </v-list-tile-action>
@@ -21,7 +21,7 @@
               </v-list-tile>
 
               <div v-if="menu.children" v-for="subMenu in menu.children" :key="subMenu.id">
-                <v-list-tile>
+                <v-list-tile style="height:34px">
                   <v-list-tile-action>
 
                   </v-list-tile-action>
@@ -33,7 +33,7 @@
                   </v-list-tile-content>
                 </v-list-tile>
 
-                <v-list-tile v-if="subMenu.children" v-for="subsubMenu in subMenu.children" :key="subsubMenu.id">
+                <v-list-tile v-if="subMenu.children" v-for="subsubMenu in subMenu.children" :key="subsubMenu.id" style="height:34px">
                   <v-list-tile-action/>
                   <v-list-tile-action/>
                   <v-list-tile-action>
@@ -114,6 +114,7 @@ export default {
 
       //========fields==========
       menus: [],
+      loadedMenus: [],
       selectedMenu: {},
       editMenu: {},
       isLoading: false,
@@ -122,13 +123,6 @@ export default {
   },
   created() {
     this.initItems()
-    //json데이터로 한번 변환한다음 리턴하여, store에 있는데이터와의 바인딩을 제거한다
-    this.menus = JSON.parse(JSON.stringify(this.$store.getters.loadedMenus))
-  },
-  computed: {
-    loadedMenus() {
-      return this.CONST.unflatten(this.menus)
-    }
   },
   methods: {
     initItems() {
@@ -150,7 +144,12 @@ export default {
           value: 'single'
         }
       }
+      //store의 loadidMenu에 familyName등을 추가해 주기위함
+      this.CONST.unflatten(this.$store.getters.loadedMenus)
+
+      //json데이터로 한번 변환한다음 리턴하여, store에 있는데이터와의 바인딩을 제거한다
       this.menus = JSON.parse(JSON.stringify(this.$store.getters.loadedMenus))
+      this.loadedMenus = this.CONST.unflatten(this.menus)
     },
     onSubmitted() {
       let menu = this.editMenu

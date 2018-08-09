@@ -32,7 +32,11 @@ export default {
         )
     },
     loadedCategories() {
-      return this.$store.getters.loadedCategories
+      return this.$store.getters.loadedCategories.filter(
+        x =>
+          x.limitedMenu &&
+          x.limitedMenu.filter(menu => menu.id === this.paramId).length > 0
+      )
     }
   }
 }
