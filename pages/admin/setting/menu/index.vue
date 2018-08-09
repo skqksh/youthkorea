@@ -4,7 +4,10 @@
     <v-layout row wrap justify-space-around>
       <v-flex xs12 sm6 md5>
         <v-card>
-          <h1>메뉴 목록</h1>
+          <h1>메뉴 목록
+             <v-btn @click="initItems()">
+              <v-icon>cached</v-icon>새로고침</v-btn>
+          </h1>
           <v-list>
             <div v-for="menu in loadedMenus" :key="menu.id">
 

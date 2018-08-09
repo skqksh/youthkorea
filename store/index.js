@@ -18,6 +18,13 @@ const createStore = () => {
       addCategory(state, category) {
         state.loadedCategories.push(category)
       },
+      editCategory(state, category) {
+        const menuIndex = state.loadedCategories.findIndex(item => item.id === category.id);
+        state.loadedCategories[menuIndex] = category
+      },
+      delCategory(state, categoryId) {
+        state.loadedCategories = state.loadedCategories.filter(x => x.id !== categoryId)
+      },
       //==================== posts start =====================
       setPosts(state, posts) {
         state.loadedPosts = posts
@@ -144,14 +151,22 @@ const createStore = () => {
           })
           .catch(e => console.log(e))
       },
-      delCategory(vuexContext, categoryIdList) {
-        for (var key in categoryIdList) {
-          this.$axios.$delete('/category/' + categoryIdList[key] + '.json?auth=' + vuexContext.state.token)
-            .then(data => {
+      editCategory(vuexContext, editedCategory) {
+        return this.$axios.$put('/category/' + editedCategory.id + '.json?auth=' + vuexContext.state.token, {
+            ...editedCategory
+          })
+          .then(data => {
+            vuexContext.commit('editCategory', editedCategory)
+          })
+          .catch(error => console.log(error))
+      },
+      delCategory(vuexContext, category) {
+        this.$axios.$delete('/category/' + category.id + '.json?auth=' + vuexContext.state.token)
+          .then(data => {
+            vuexContext.commit('delCategory', category.id)
+          })
+          .catch(error => console.log(error))
 
-            })
-            .catch(error => console.log(error))
-        }
         return true;
       },
       //==================== menu start =====================
