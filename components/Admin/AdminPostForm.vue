@@ -34,36 +34,37 @@
       <v-flex xs12 v-else>
         <v-form @submit.prevent="onSave">
 
-          <v-select @change="changeMenu()" v-model="editedPost.menuId" :items="singleTypeMenus" label="페이지" item-text="familyName" item-value="id"></v-select>
+          <v-select @change="changeMenu()" v-model="editedPost.menuId" :items="singleTypeMenus" label="페이지" item-text="familyName"
+            item-value="id"></v-select>
 
-<div v-if="editedPost.menuId">
+          <div v-if="editedPost.menuId">
 
-          <AppControlInput v-model="editedPost.title" label="제목" required></AppControlInput>
+            <AppControlInput v-model="editedPost.title" label="제목" required></AppControlInput>
 
-          <AppControlInput v-model="editedPost.previewText" label="부제목"></AppControlInput>
+            <AppControlInput v-model="editedPost.previewText" label="부제목"></AppControlInput>
 
-          <AppControlInput v-model="editedPost.thumbnail" label="이미지URL"></AppControlInput>
-          <div v-if="editedPost.thumbnail">
-            미리보기
-            <div>
-              <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+            <AppControlInput v-model="editedPost.thumbnail" label="이미지URL"></AppControlInput>
+            <div v-if="editedPost.thumbnail">
+              미리보기
+              <div>
+                <img :src="editedPost.thumbnail" alt="유효하지 않은 이미지">
+              </div>
             </div>
+            <AppControlInput control-type="textarea" v-model="editedPost.content" label="내용" required></AppControlInput>
+
+            <AppButton type="submit">Save</AppButton>
+
+            <AppButton type="button" style="margin-left: 10px" btn-style="error" @click="onCancel">Cancel</AppButton>
           </div>
-          <AppControlInput control-type="textarea" v-model="editedPost.content" label="내용" required></AppControlInput>
-
-          <AppButton type="submit">Save</AppButton>
-
-          <AppButton type="button" style="margin-left: 10px" btn-style="error" @click="onCancel">Cancel</AppButton>
-</div>
         </v-form>
       </v-flex>
     </v-layout>
-    <div v-if="this.$store.getters.isDev">
-         <br> ========================
-        <br> editedPost:{{editedPost}}
-          <br> ========================
-        <br> muliTypeMenus:{{muliTypeMenus}}
-      </div>
+    <div v-if="this.$store.getters.isDev" style="white-space:pre-wrap">
+      <br> ========================
+      <br> editedPost:{{editedPost}}
+      <br> ========================
+      <br> muliTypeMenus:{{muliTypeMenus}}
+    </div>
   </v-container>
 
 </template>

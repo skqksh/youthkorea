@@ -47,6 +47,7 @@ export default {
   },
   mounted() {
     //created에서는 이미지목록을 가지고 오지 못함
+
     document.querySelectorAll('#mainCarousel img').forEach(val => {
       val.style.height = '100%'
     })

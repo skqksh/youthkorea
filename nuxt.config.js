@@ -92,7 +92,12 @@ module.exports = {
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {}
+    babel: {
+
+      plugins: ['transform-runtime'],
+      presets: ['es2015', 'stage-0']
+    },
+    vendor: ['babel-polyfill', 'eventsource-polyfill']
   },
 
   //클라이언트와 서버 측면에서 공유할 환경 변수들
