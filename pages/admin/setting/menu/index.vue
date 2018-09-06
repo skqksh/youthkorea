@@ -284,9 +284,16 @@ export default {
         targetIndex,
         targetIndex + (isUp ? -1 : 1)
       )
+
       menuGroup.forEach((x, i) => {
         x.order = i
-        this.$store.dispatch('editMenu', x).then(() => {})
+        this.$store.dispatch('editMenu', x).then(() => {
+          //json데이터로 한번 변환한다음 리턴하여, store에 있는데이터와의 바인딩을 제거한다
+          this.menus = JSON.parse(
+            JSON.stringify(this.$store.getters.loadedMenus)
+          )
+          this.loadedMenus = this.CONST.unflatten(this.menus)
+        })
       })
     },
     getSelectedMenuOptionList() {
