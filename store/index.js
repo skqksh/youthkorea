@@ -4,6 +4,7 @@ import Cookie from 'js-cookie'
 const createStore = () => {
   return new Vuex.Store({
     state: {
+      loadedMainLBannerImgList: [],
       loadedPosts: [],
       loadedCategories: [],
       loadedMenus: [],
@@ -11,6 +12,20 @@ const createStore = () => {
       isDev: false
     },
     mutations: {
+      //==================== mainLBannerImg start =====================
+      setMainLBannerImgList(state, mainLBannerImgList) {
+        state.loadedMainLBannerImgList = mainLBannerImgList
+      },
+      addMainLBannerImg(state, mainLBannerImg) {
+        state.loadedMainLBannerImgList.push(mainLBannerImg)
+      },
+      editMainLBannerImg(state, mainLBannerImg) {
+        const itemIndex = state.loadedCategories.findIndex(item => item.id === mainLBannerImg.id);
+        state.loadedMainLBannerImgList[itemIndex] = mainLBannerImg
+      },
+      delMainLBannerImg(state, mainLBannerImgId) {
+        state.loadedMainLBannerImgList = state.loadedCategories.filter(x => x.id !== mainLBannerImgId)
+      },
       //==================== category start =====================
       setCategory(state, categoryList) {
         state.loadedCategories = categoryList
@@ -67,10 +82,70 @@ const createStore = () => {
         */
         //debugger;
         //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용        
+        await vuexContext.dispatch('getMainLBannerImgList')
         await vuexContext.dispatch('getPosts')
         await vuexContext.dispatch('getCategories')
         await vuexContext.dispatch('getMenus')
       },
+      //==================== mainLBannerImg start =====================
+      addMainLBannerImg(vuexContext, item) {
+        const createdItem = {
+          ...item,
+          updatedDate: new Date()
+        }
+
+        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
+        return this.$axios.$post('/mainLBannerImg.json?auth=' + vuexContext.state.token, createdItem)
+          .then(data => {
+
+            vuexContext.commit('addMainLBannerImg', { ...createdItem,
+              id: data.name
+            })
+          })
+          .catch(e => console.log(e))
+      },
+      editMainLBannerImg(vuexContext, editedItem) {
+        //아래와 같이 firebase의 realtimedatabase 를 이용해 데이터를 이용
+        //firebase .write rule 이 auth!=null 인경우
+        //https://firebase.google.com/docs/database/rest/auth 설명참고
+        //쿼리 파라미터 필요함
+        return this.$axios.$put('/mainLBannerImg/' + editedItem.id + '.json?auth=' + vuexContext.state.token, {
+            ...editedItem
+          })
+          .then(data => {
+            vuexContext.commit('editMainLBannerImg', editedItem)
+          })
+          .catch(error => console.log(error))
+      },
+      setMainLBannerImgList(vuexContext, itemList) {
+        vuexContext.commit('setMainLBannerImgList', itemList)
+      },
+      getMainLBannerImgList(vuexContext) {
+
+        return this.$axios
+          .$get('/mainLBannerImg.json')
+          .then(data => {
+            const ItemListArr = [];
+            for (const key in data) {
+              ItemListArr.push({ ...data[key],
+                id: key
+              })
+            }
+            vuexContext.commit('setMainLBannerImgList', ItemListArr)
+
+          })
+          .catch(e => context.error(e))
+      },
+      delMainLBannerImg(vuexContext, item) {
+        this.$axios.$delete('/mainLBannerImg/' + item.id + '.json?auth=' + vuexContext.state.token)
+          .then(data => {
+            vuexContext.commit('delMainLBannerImg', item.id)
+          })
+          .catch(error => console.log(error))
+
+        return true;
+      },
+      //==================== mainLBannerImg end =====================
       //==================== posts start =====================
       addPost(vuexContext, post) {
         const createdPost = {
@@ -293,6 +368,9 @@ const createStore = () => {
       }
     },
     getters: {
+      loadedMainLBannerImgList(state) {
+        return state.loadedMainLBannerImgList
+      },
       loadedPosts(state) {
         return state.loadedPosts
       },
