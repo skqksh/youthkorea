@@ -11,13 +11,13 @@
     <v-toolbar :clipped-right="$vuetify.breakpoint.lgAndUp" color="blue darken-2" dark app fixed>      
       <v-toolbar-title style="width: 300px" class="ml-0" >
         <v-icon @click.stop="drawer = !drawer" v-if="isAdmin">list&nbsp;&nbsp;</v-icon>
-        <nuxt-link to="/"> 한국청소년문화원</nuxt-link>
+        <nuxt-link to="/"><span @mouseout="selectedMainMenu=''">한국청소년문화원</span> </nuxt-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-side-icon @click.stop="drawerRight = !drawerRight" class="hidden-md-and-up"></v-toolbar-side-icon>
 
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat v-for="(menu, index) in loadedMenus" :key="index" @click="clickMenu(menu.id);selectedMainMenu=menu.id" @mouseover="selectedMainMenu=menu.id" @mouseout="selectedMainMenu=''">
+        <v-btn flat v-for="(menu, index) in loadedMenus" :key="index" @click="clickMenu(menu.id);selectedMainMenu=menu.id" @mouseover="selectedMainMenu=menu.id">
           {{menu.name}}
         </v-btn>
 
